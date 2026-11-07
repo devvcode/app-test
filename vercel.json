@@ -3,5 +3,11 @@
   "installCommand": "npm install",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "trailingSlash": true
+  "trailingSlash": true,
+  "rewrites": [
+    {
+      "source": "/shopping-cart/:path*",
+      "destination": "/shopping-cart/index.html"
+    }
+  ]
 }
