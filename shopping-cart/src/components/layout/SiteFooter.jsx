@@ -1,4 +1,4 @@
-import { ArrowUpRight, Instagram, Mail } from "lucide-react";
+import { ArrowUpRight, Camera, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function SiteFooter() {
@@ -13,7 +13,7 @@ export default function SiteFooter() {
             </Link>
             <p>Thoughtful little things for the life you live every day.</p>
             <div className="footer-socials">
-              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={17} /></a>
+              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram"><Camera size={17} /></a>
               <a href="mailto:hello@morrowmarket.example" aria-label="Email"><Mail size={17} /></a>
             </div>
           </div>
