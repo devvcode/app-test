@@ -11,6 +11,13 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
+  "appTestLab": {
+    "displayName": "Student Library",
+    "description": "Manage a book catalogue, track checkouts and returns, and monitor library statistics.",
+    "category": "PRODUCTIVITY · REACT",
+    "icon": "▤",
+    "sortOrder": 10
+  },
   "dependencies": {
     "react": "^19.3.1",
     "react-dom": "^19.3.1"

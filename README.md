@@ -10,7 +10,7 @@ Install all workspace dependencies once, from the repository root:
 npm install
 ```
 
-Run the root app-test landing page:
+Run the root App Test Lab landing page (the homepage manifest is generated automatically):
 
 ```bash
 npm run dev
@@ -33,17 +33,33 @@ From the repository root:
 npm run build
 ```
 
-The root build creates the landing page, discovers top-level workspace folders with a `package.json` and `build` script, builds each workspace independently, assigns its deployed base path, and copies its local `dist/` into `dist/<app-folder>/`.
+The root build discovers top-level workspace folders with a `package.json` and `build` script, generates `public/apps.json` for the homepage, builds the landing page, builds each workspace independently, assigns its deployed base path, and copies its local `dist/` into `dist/<app-folder>/`. The generated manifest is ignored by Git and recreated for every root development start and production build.
 
 ## Add another mini-app
 
-Create a new top-level folder with its own `package.json`, Vite config, `index.html`, and `src/`. Give it a `build` script and configure Vite with:
+Create a new top-level folder with its own `package.json`, Vite config, `index.html`, and `src/`. Give it a unique package name and a `build` script, and configure Vite with:
 
 ```js
 base: process.env.APP_BASE_PATH || "/"
 ```
 
-Its normal build output should be the folder's local `dist/`. The root npm workspace pattern (`*`) discovers top-level folders with package manifests, and the root build script packages their output under the matching URL path. Add a card to the root `index.html` to list it on the landing page.
+Its normal build output should be the folder's local `dist/`. The root npm workspace pattern (`*`) and build script automatically discover top-level folders that contain a package manifest and build script. The app is automatically built under `/<folder-name>/` and added to the homepage; **you do not need to edit the root `index.html`**.
+
+For a polished homepage card, add optional metadata to the new app's `package.json`:
+
+```json
+{
+  "appTestLab": {
+    "displayName": "My Project",
+    "description": "A short description of the application.",
+    "category": "TOOLS · REACT",
+    "icon": "✦",
+    "sortOrder": 30
+  }
+}
+```
+
+If omitted, the card title is derived from the folder name and sensible defaults are used for the description, category, and icon. Lower `sortOrder` values appear first.
 
 ## Vercel
 

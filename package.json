@@ -10,7 +10,7 @@
     "*"
   ],
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "node scripts/workspace-manifest.js && vite --host 0.0.0.0",
     "build:home": "vite build",
     "build": "node scripts/build-all.mjs",
     "preview": "vite preview --host 0.0.0.0"

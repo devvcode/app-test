@@ -1,7 +1,8 @@
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { discoverWorkspaceApps, writeAppsManifest } from "./workspace-manifest.js";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = resolve(repositoryRoot, "dist");
@@ -18,38 +19,31 @@ function runNpm(args, extraEnvironment = {}) {
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
+// Discover apps and generate the homepage manifest before Vite copies public/ into dist/.
+const workspaces = discoverWorkspaceApps(repositoryRoot);
+writeAppsManifest(repositoryRoot, workspaces);
+
 // Build the root landing page first; Vite clears dist/ before app output is copied.
 runNpm(["run", "build:home"]);
 
-const ignoredDirectories = new Set([".git", ".vercel", "dist", "node_modules", "scripts"]);
-const appDirectories = readdirSync(repositoryRoot, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory() && !entry.name.startsWith(".") && !ignoredDirectories.has(entry.name))
-  .sort((a, b) => a.name.localeCompare(b.name));
+for (const workspace of workspaces) {
+  const { directory, packageName } = workspace;
+  const appDirectory = resolve(repositoryRoot, directory);
 
-let builtApps = 0;
-for (const entry of appDirectories) {
-  const appDirectory = resolve(repositoryRoot, entry.name);
-  const manifestPath = resolve(appDirectory, "package.json");
-  if (!existsSync(manifestPath)) continue;
-
-  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
-  if (!manifest.name || !manifest.scripts?.build) {
-    console.warn(`Skipping ${entry.name}: package.json needs a name and build script.`);
-    continue;
-  }
-
-  console.log(`\nBuilding workspace: ${manifest.name}`);
-  runNpm(["run", "build", `--workspace=${manifest.name}`], {
-    APP_BASE_PATH: `/${entry.name}/`
+  console.log(`\nBuilding workspace: ${packageName}`);
+  runNpm(["run", "build", `--workspace=${packageName}`], {
+    APP_BASE_PATH: `/${directory}/`
   });
 
   const workspaceOutput = resolve(appDirectory, "dist");
-  if (!existsSync(workspaceOutput)) throw new Error(`Workspace ${entry.name} did not create dist/.`);
+  if (!existsSync(workspaceOutput)) {
+    throw new Error(`Workspace ${directory} did not create dist/.`);
+  }
 
-  const deploymentOutput = resolve(outputRoot, entry.name);
+  const deploymentOutput = resolve(outputRoot, directory);
   rmSync(deploymentOutput, { recursive: true, force: true });
   mkdirSync(outputRoot, { recursive: true });
   cpSync(workspaceOutput, deploymentOutput, { recursive: true });
-  builtApps += 1;
 }
-console.log(`\nBuild complete: root homepage and ${builtApps} workspace app(s) are in dist/.`);
+
+console.log(`\nBuild complete: root homepage and ${workspaces.length} workspace app(s) are in dist/.`);

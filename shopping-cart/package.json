@@ -11,6 +11,13 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
+  "appTestLab": {
+    "displayName": "Morrow Market — Shopping Cart",
+    "description": "A mixed storefront for groceries, home living and fashion, with cart, wishlist and simulated checkout.",
+    "category": "COMMERCE · REACT + REDUX TOOLKIT",
+    "icon": "◈",
+    "sortOrder": 20
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^2.14.0",
     "lucide-react": "^1.70.0",
