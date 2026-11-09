@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowDown, ChevronLeft, ChevronRight, Pause, Play, Sparkles } from "lucide-react";
 import { heroSlides } from "../data/photos.js";
+
+const IMAGE_DURATION = 7600;
 
 export default function HeroCarousel({ year, festivalDate }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const videoRef = useRef(null);
   const activeSlide = heroSlides[activeIndex];
 
   useEffect(() => {
@@ -16,16 +19,58 @@ export default function HeroCarousel({ year, festivalDate }) {
     return () => media.removeEventListener?.("change", update);
   }, []);
 
+  // Still images use the regular carousel interval. The video advances on playback time.
   useEffect(() => {
-    if (paused || reducedMotion) return undefined;
-    const timer = window.setInterval(() => {
+    if (paused || reducedMotion || activeSlide.type === "video") return undefined;
+    const timer = window.setTimeout(() => {
       setActiveIndex((index) => (index + 1) % heroSlides.length);
-    }, 7600);
-    return () => window.clearInterval(timer);
-  }, [paused, reducedMotion]);
+    }, IMAGE_DURATION);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, activeSlide.type, paused, reducedMotion]);
+
+  // Keep the background video in step with hover/focus pause and reduced-motion settings.
+  useEffect(() => {
+    if (activeSlide.type !== "video") return undefined;
+    const video = videoRef.current;
+    if (!video) return undefined;
+
+    if (paused || reducedMotion) {
+      video.pause();
+      return undefined;
+    }
+
+    const playRequest = video.play();
+    if (playRequest && typeof playRequest.catch === "function") {
+      playRequest.catch(() => {
+        setActiveIndex((current) =>
+          current === activeIndex ? (activeIndex + 1) % heroSlides.length : current
+        );
+      });
+    }
+
+    return undefined;
+  }, [activeIndex, activeSlide.type, paused, reducedMotion]);
 
   function moveSlide(direction) {
     setActiveIndex((index) => (index + direction + heroSlides.length) % heroSlides.length);
+  }
+
+  function advanceFromVideo() {
+    setActiveIndex((current) =>
+      current === activeIndex ? (activeIndex + 1) % heroSlides.length : current
+    );
+  }
+
+  function handleImageError(index, fallbackImage, event) {
+    const image = event.currentTarget;
+    if (fallbackImage && image.dataset.fallbackAttempted !== "true") {
+      image.dataset.fallbackAttempted = "true";
+      image.src = fallbackImage;
+      return;
+    }
+    setActiveIndex((current) =>
+      current === index ? (index + 1) % heroSlides.length : current
+    );
   }
 
   return (
@@ -40,16 +85,49 @@ export default function HeroCarousel({ year, festivalDate }) {
       }}
     >
       <div className="hero-image-stack" aria-hidden="true">
-        {heroSlides.map((slide, index) => (
-          <img
-            className={"hero-photo" + (index === activeIndex ? " is-active" : "")}
-            src={slide.image}
-            alt=""
-            key={slide.id}
-            fetchPriority={index === 0 ? "high" : "auto"}
-            loading={index === 0 ? "eager" : "lazy"}
-          />
-        ))}
+        {heroSlides.map((slide, index) => {
+          if (slide.type === "video") {
+            if (index !== activeIndex) return null;
+            return (
+              <video
+                ref={videoRef}
+                key={slide.id}
+                className="hero-photo hero-video is-active"
+                src={slide.src}
+                poster={slide.poster}
+                muted
+                playsInline
+                autoPlay={!paused && !reducedMotion}
+                preload="auto"
+                aria-hidden="true"
+                onTimeUpdate={(event) => {
+                  if (
+                    !paused &&
+                    !reducedMotion &&
+                    event.currentTarget.currentTime >= slide.duration / 1000
+                  ) {
+                    advanceFromVideo();
+                  }
+                }}
+                onEnded={advanceFromVideo}
+                onError={advanceFromVideo}
+              />
+            );
+          }
+
+          return (
+            <img
+              className={"hero-photo" + (index === activeIndex ? " is-active" : "")}
+              src={slide.image}
+              alt=""
+              key={slide.id}
+              referrerPolicy="no-referrer"
+              fetchPriority={index === 1 ? "high" : "auto"}
+              loading={index === 1 || index === activeIndex ? "eager" : "lazy"}
+              onError={(event) => handleImageError(index, slide.fallbackImage, event)}
+            />
+          );
+        })}
       </div>
       <div className="hero-overlay" />
       <div className="hero-grain" />

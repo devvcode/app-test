@@ -58,83 +58,85 @@ const rangoliDiya = {
   license: "CC BY-SA 4.0"
 };
 
+// These four image URLs were supplied by the site owner. Their original creator/licence
+// details were not included with the URLs; see the attribution note in the footer.
+const suppliedPinterestImages = [
+  {
+    id: "pinterest-diwali-01",
+    image: "https://i.pinimg.com/1200x/75/d2/63/75d26371c7e097fade41b316c9a44abe.jpg",
+    fallbackImage: family.image,
+    alt: "Diwali celebration photograph supplied by the site owner.",
+    eyebrow: "A FESTIVAL IN FULL COLOUR",
+    title: "A night wrapped in light.",
+    emphasis: "A moment to remember.",
+    description: "A festive moment from the celebration of Diwali.",
+    theme: "gold"
+  },
+  {
+    id: "pinterest-diwali-02",
+    image: "https://i.pinimg.com/736x/7c/17/6b/7c176b2c32792010dafe2d8bdb161bc8.jpg",
+    fallbackImage: diya.image,
+    alt: "Diwali celebration photograph supplied by the site owner.",
+    eyebrow: "LITTLE LIGHTS, BIG JOY",
+    title: "Let the evening glow.",
+    emphasis: "Let the joy stay.",
+    description: "A little festive inspiration for a season of togetherness.",
+    theme: "rose"
+  },
+  {
+    id: "pinterest-diwali-03",
+    image: "https://i.pinimg.com/736x/0f/dc/6c/0fdc6ca0275441dfce34b720894504a4.jpg",
+    fallbackImage: rangoli.image,
+    alt: "Diwali celebration photograph supplied by the site owner.",
+    eyebrow: "THE BEAUTY OF DEEPAWALI",
+    title: "Tradition in every detail.",
+    emphasis: "Wonder in every glow.",
+    description: "A celebration shaped by colour, light and meaningful little rituals.",
+    theme: "pink"
+  },
+  {
+    id: "pinterest-diwali-04",
+    image: "https://i.pinimg.com/736x/72/73/c5/7273c5b36d89155d1e576ef231866f2f.jpg",
+    fallbackImage: rangoliDiya.image,
+    alt: "Diwali celebration photograph supplied by the site owner.",
+    eyebrow: "A SEASON TO CELEBRATE",
+    title: "Make room for magic.",
+    emphasis: "Make room for light.",
+    description: "May the season bring brightness to every home and heart.",
+    theme: "blue"
+  }
+];
+
+export const DIWALI_HEADER_VIDEO =
+  "https://v1.pinimg.com/videos/iht/720p/aa/5e/42/aa5e42079790c17be2199fb1039a8a73.mp4";
+
 export const heroSlides = [
   {
-    id: "welcome",
-    image: family.image,
-    alt: family.alt,
+    id: "diwali-video-intro",
+    type: "video",
+    src: DIWALI_HEADER_VIDEO,
+    poster: suppliedPinterestImages[0].image,
+    duration: 6000,
     eyebrow: "THE FESTIVAL OF LIGHTS",
     title: "A thousand little lights.",
     emphasis: "One beautiful celebration.",
     description: "A season of warmth, new beginnings and the joy of being together.",
     theme: "gold"
   },
-  {
-    id: "diyas",
-    image: diya.image,
-    alt: diya.alt,
-    eyebrow: "A LIGHT WITHIN",
-    title: "Let every little flame",
-    emphasis: "carry a little hope.",
-    description: "Across doorways and courtyards, a diya turns an ordinary evening into something special.",
-    theme: "rose"
-  },
-  {
-    id: "fireworks",
-    image: fireworks.image,
-    alt: fireworks.alt,
-    eyebrow: "THE NIGHT SKY",
-    title: "Tonight, the sky",
-    emphasis: "celebrates with us.",
-    description: "A moment of wonder, colour and light against the quiet of the night.",
-    theme: "blue"
-  },
-  {
-    id: "rangoli",
-    image: rangoli.image,
-    alt: rangoli.alt,
-    eyebrow: "COLOURS OF DEEPAVALI",
-    title: "Every colour",
-    emphasis: "has a story.",
-    description: "Patterns made with care welcome the season at the threshold of home.",
-    theme: "pink"
-  },
-  {
-    id: "together",
-    image: rangoliDiya.image,
-    alt: rangoliDiya.alt,
-    eyebrow: "A CELEBRATION OF TOGETHERNESS",
-    title: "Make room for",
-    emphasis: "more light.",
-    description: "May every home find peace, every heart find joy and every new beginning shine.",
-    theme: "gold"
-  }
+  ...suppliedPinterestImages.map((photo) => ({
+    ...photo,
+    type: "image"
+  }))
 ];
 
+// Each original Commons photograph appears once in the gallery.
+// The three former cloned records have been removed.
 export const galleryPhotos = [
   family,
   diya,
   fireworks,
   rangoli,
-  rangoliDiya,
-  {
-    ...family,
-    id: "family-again",
-    title: "A tradition passed hand to hand",
-    caption: "Little rituals become the memories we keep."
-  },
-  {
-    ...rangoli,
-    id: "rangoli-detail",
-    title: "A welcome made of colour",
-    caption: "A festive pattern at the entrance of home."
-  },
-  {
-    ...fireworks,
-    id: "night-sparks",
-    title: "A moment in the night",
-    caption: "The sparkle of a shared celebration."
-  }
+  rangoliDiya
 ];
 
 export const photoCredits = [
@@ -172,7 +174,14 @@ export const photoCredits = [
     license: "CC BY-SA 4.0",
     source: rangoliDiya.source,
     licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/"
-  }
+  },
+  ...suppliedPinterestImages.map((photo, index) => ({
+    name: "Site-owner supplied Pinterest image " + (index + 1),
+    author: "Original creator not identified in supplied URL",
+    license: "Original image licence not provided; confirm permission before reuse.",
+    source: photo.image,
+    licenseUrl: null
+  }))
 ];
 
 export const galleryCategories = ["All moments", "Diyas", "Fireworks", "Rangoli", "Togetherness"];

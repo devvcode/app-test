@@ -147,10 +147,14 @@ function PhotoCredits() {
         {photoCredits.map((credit) => (
           <p key={credit.name}>
             <strong>{credit.name}</strong> — {credit.author}.{" "}
-            <a href={credit.source} target="_blank" rel="noreferrer">Original photograph</a>
+            <a href={credit.source} target="_blank" rel="noreferrer">Source image</a>
             {" · "}
-            <a href={credit.licenseUrl} target="_blank" rel="noreferrer">{credit.license}</a>.
-            {" "}Displayed from Wikimedia Commons thumbnails.
+            {credit.licenseUrl ? (
+              <a href={credit.licenseUrl} target="_blank" rel="noreferrer">{credit.license}</a>
+            ) : (
+              <span>{credit.license}</span>
+            )}.
+            {credit.licenseUrl ? " Displayed from Wikimedia Commons thumbnails." : " Supplied Pinterest reference; original creator and licence were not included."}
           </p>
         ))}
       </div>

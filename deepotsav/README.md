@@ -47,3 +47,12 @@ No image is represented as our original work. The gallery captions are editorial
 - All gallery photographs have descriptive alternative text.
 - Interactive diyas and greeting controls are keyboard accessible.
 - No sound or rapid flashing effects are used.
+
+
+## Supplied header images and background video
+
+Four additional hero images are loaded from the direct Pinterest CDN URLs supplied by the site owner. The opening hero slide attempts to play the supplied MP4 in the background, muted and inline. It advances after six seconds of playback; if the browser cannot load or play the remote media, the carousel automatically moves to the next image.
+
+The Pinterest CDN URLs could not be fetched from the implementation environment, so their availability and video playback should be confirmed in the deployed browser. If a supplied image fails to load, its slide attempts a unique existing Wikimedia Commons photograph as a fallback.
+
+The supplied Pinterest image/video links do not include original creator or licence details. They are labelled as site-owner-provided references in the credits; confirm that you have permission to display them publicly. No Pinterest media binaries are copied into this repository.
