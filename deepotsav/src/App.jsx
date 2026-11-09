@@ -84,7 +84,20 @@ function GallerySection() {
         {filtered.map((photo, index) => (
           <article className={"photo-card photo-card-" + (index % 4)} key={photo.id}>
             <a className="photo-card-image" href={photo.source} target="_blank" rel="noreferrer" aria-label={"View source photograph: " + photo.title}>
-              <img src={photo.image} alt={photo.alt} loading="lazy" decoding="async" />
+              <img
+                src={photo.image}
+                alt={photo.alt}
+                loading="lazy"
+                decoding="async"
+                referrerPolicy="no-referrer"
+                onError={(event) => {
+                  const fallback = photo.fallbackImage;
+                  if (fallback && event.currentTarget.dataset.fallbackAttempted !== "true") {
+                    event.currentTarget.dataset.fallbackAttempted = "true";
+                    event.currentTarget.src = fallback;
+                  }
+                }}
+              />
               <span className="photo-open"><ArrowUpRight size={17} /></span>
             </a>
             <div className="photo-card-copy">

@@ -49,10 +49,8 @@ No image is represented as our original work. The gallery captions are editorial
 - No sound or rapid flashing effects are used.
 
 
-## Supplied header images and background video
+## Supplied gallery images
 
-Four additional hero images are loaded from the direct Pinterest CDN URLs supplied by the site owner. The opening hero slide attempts to play the supplied MP4 in the background, muted and inline. It advances after six seconds of playback; if the browser cannot load or play the remote media, the carousel automatically moves to the next image.
+Four additional photographs supplied by the site owner are displayed in the “Little moments. Lasting memories.” gallery alongside the five original Wikimedia Commons photographs. They are not part of the header carousel. If a supplied Pinterest image cannot be loaded, the gallery card falls back to an existing local gallery image.
 
-The Pinterest CDN URLs could not be fetched from the implementation environment, so their availability and video playback should be confirmed in the deployed browser. If a supplied image fails to load, its slide attempts a unique existing Wikimedia Commons photograph as a fallback.
-
-The supplied Pinterest image/video links do not include original creator or licence details. They are labelled as site-owner-provided references in the credits; confirm that you have permission to display them publicly. No Pinterest media binaries are copied into this repository.
+The Pinterest URLs do not identify the original creator or licence. The credits section marks them as site-owner supplied references; confirm permission before making the site public. No video is used by the header carousel.
