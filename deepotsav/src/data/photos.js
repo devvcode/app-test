@@ -114,16 +114,6 @@ const suppliedPinterestImages = [
 // The header keeps the original five image slides and does not use the new Pinterest images.
 export const heroSlides = [
   {
-    id: "welcome",
-    image: family.image,
-    alt: family.alt,
-    eyebrow: "THE FESTIVAL OF LIGHTS",
-    title: "A thousand little lights.",
-    emphasis: "One beautiful celebration.",
-    description: "A season of warmth, new beginnings and the joy of being together.",
-    theme: "gold"
-  },
-  {
     id: "diyas",
     image: diya.image,
     alt: diya.alt,
@@ -132,6 +122,16 @@ export const heroSlides = [
     emphasis: "carry a little hope.",
     description: "Across doorways and courtyards, a diya turns an ordinary evening into something special.",
     theme: "rose"
+  },
+  {
+    id: "welcome",
+    image: family.image,
+    alt: family.alt,
+    eyebrow: "THE FESTIVAL OF LIGHTS",
+    title: "A thousand little lights.",
+    emphasis: "One beautiful celebration.",
+    description: "A season of warmth, new beginnings and the joy of being together.",
+    theme: "gold"
   },
   {
     id: "fireworks",
@@ -167,8 +167,8 @@ export const heroSlides = [
 
 // The gallery contains the five original Commons photographs plus the four supplied images.
 export const galleryPhotos = [
-  family,
   diya,
+  family,
   fireworks,
   rangoli,
   rangoliDiya,
